@@ -1,10 +1,40 @@
-#include "header/player.h"
+#include "src/player/player.h"
+#include "src/map/tilemap.h"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Platformer");
 
     Player player;
+    sf::VertexArray triangle(sf::Triangles, 3);
+
+    // define the position of the triangle's points
+    triangle[0].position = sf::Vector2f(10, 10);
+    triangle[1].position = sf::Vector2f(100, 10);
+    triangle[2].position = sf::Vector2f(100, 100);
+
+    // define the color of the triangle's points
+    triangle[0].color = sf::Color::Red;
+    triangle[1].color = sf::Color::Blue;
+    triangle[2].color = sf::Color::Green;
+
+    // define the level with an array of tile indices
+    const int level[] =
+    {
+        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0,
+        1, 1, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3,
+        0, 1, 0, 0, 2, 0, 3, 3, 3, 0, 1, 1, 1, 0, 0, 0,
+        0, 1, 1, 0, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2, 0, 0,
+        0, 0, 1, 0, 3, 0, 2, 2, 0, 0, 1, 1, 1, 1, 2, 0,
+        2, 0, 1, 0, 3, 0, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1,
+        0, 0, 1, 0, 3, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1,
+    };
+
+    // create the tilemap from the level definition
+    TileMap map;
+    if (!map.load("assets/tileset.png", sf::Vector2u(32, 32), level, 16, 8))
+        return -1;
 
     while (window.isOpen())
     {
@@ -24,6 +54,16 @@ int main()
                             player.setAnimation(PLAYER_ANIMATION_IDLE);
                             break;
                     }
+                    break;
+
+                case sf::Event::KeyPressed:
+                    switch (event.key.code)
+                    {
+                        case sf::Keyboard::Space:
+
+                            break;
+                    }
+                    break;
 
                 default:
                     break;
@@ -35,10 +75,11 @@ int main()
             player.controlPlayer(PLAYER_ACTION_MOVE_LEFT);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
             player.controlPlayer(PLAYER_ACTION_MOVE_RIGHT);
-
         
         window.clear();
         player.draw(window);
+        window.draw(triangle);
+        window.draw(map);
         window.display();
     }
 

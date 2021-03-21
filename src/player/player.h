@@ -70,7 +70,6 @@ private:
 
 public:
     Player();
-    void flip();
     void controlPlayer(Action);
     void draw(sf::RenderWindow&);
     void setAnimation(int ani) { this->m_currentAnimation = ani; }

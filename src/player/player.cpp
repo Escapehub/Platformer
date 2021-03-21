@@ -1,4 +1,4 @@
-#include "../header/player.h"
+#include "player.h"
 
 Player::Player()
 {
@@ -58,7 +58,7 @@ void Player::draw(sf::RenderWindow& window)
         this->setScale(sf::Vector2f(-PLAYER_SCALE, PLAYER_SCALE));
 
     // Setting the sprite depending on action
-    this->m_playerTexture.loadFromFile("sprites/player/" + this->m_animationNames[this->m_currentAnimation] + std::to_string(this->m_currentFrame) + ".png");
+    this->m_playerTexture.loadFromFile("assets/player/" + this->m_animationNames[this->m_currentAnimation] + std::to_string(this->m_currentFrame) + ".png");
     this->setTexture(this->m_playerTexture);
 
     // Animating sprite
