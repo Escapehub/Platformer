@@ -1,6 +1,5 @@
 #include "src/map/tilemap.h"
 #include "src/player/player.h"
-#include <unistd.h>
 
 int main()
 {
@@ -25,10 +24,6 @@ int main()
     TileMap map;
     if (!map.load("assets/tileset.png", sf::Vector2u(32, 32), level, 16, 8))
        return -1;
-
-    char buff[FILENAME_MAX];
-    getcwd(buff, FILENAME_MAX);
-    printf(buff);
 
     while (window.isOpen())
     {
