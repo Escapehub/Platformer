@@ -1,22 +1,12 @@
-#include "src/player/player.h"
 #include "src/map/tilemap.h"
+#include "src/player/player.h"
+#include <unistd.h>
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Platformer");
 
     Player player;
-    sf::VertexArray triangle(sf::Triangles, 3);
-
-    // define the position of the triangle's points
-    triangle[0].position = sf::Vector2f(10, 10);
-    triangle[1].position = sf::Vector2f(100, 10);
-    triangle[2].position = sf::Vector2f(100, 100);
-
-    // define the color of the triangle's points
-    triangle[0].color = sf::Color::Red;
-    triangle[1].color = sf::Color::Blue;
-    triangle[2].color = sf::Color::Green;
 
     // define the level with an array of tile indices
     const int level[] =
@@ -34,7 +24,11 @@ int main()
     // create the tilemap from the level definition
     TileMap map;
     if (!map.load("assets/tileset.png", sf::Vector2u(32, 32), level, 16, 8))
-        return -1;
+       return -1;
+
+    char buff[FILENAME_MAX];
+    getcwd(buff, FILENAME_MAX);
+    printf(buff);
 
     while (window.isOpen())
     {
@@ -53,6 +47,9 @@ int main()
                         case sf::Keyboard::D:
                             player.setAnimation(PLAYER_ANIMATION_IDLE);
                             break;
+
+                        default:
+                            break;
                     }
                     break;
 
@@ -61,6 +58,9 @@ int main()
                     {
                         case sf::Keyboard::Space:
 
+                            break;
+                            
+                        default:
                             break;
                     }
                     break;
@@ -78,7 +78,6 @@ int main()
         
         window.clear();
         player.draw(window);
-        window.draw(triangle);
         window.draw(map);
         window.display();
     }
