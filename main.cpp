@@ -1,29 +1,29 @@
-#include "src/map/tilemap.h"
+#include "src/levelgen/levelgen.h"
 #include "src/player/player.h"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Platformer");
 
-    Player player;
+    std::unique_ptr<Player> player = std::make_unique<Player>();
 
     // define the level with an array of tile indices
     const int level[] =
     {
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0,
-        1, 1, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3,
-        0, 1, 0, 0, 2, 0, 3, 3, 3, 0, 1, 1, 1, 0, 0, 0,
-        0, 1, 1, 0, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2, 0, 0,
-        0, 0, 1, 0, 3, 0, 2, 2, 0, 0, 1, 1, 1, 1, 2, 0,
-        2, 0, 1, 0, 3, 0, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1,
-        0, 0, 1, 0, 3, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1,
+        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
     };
 
     // create the tilemap from the level definition
-    TileMap map;
-    if (!map.load("assets/tileset.png", sf::Vector2u(32, 32), level, 16, 8))
-       return -1;
+    LevelGen map;
+    if (!map.load("assets/level/tileset.png", sf::Vector2u(128, 128), level, 16, 8))
+        return EXIT_FAILURE;
 
     while (window.isOpen())
     {
@@ -40,7 +40,8 @@ int main()
                     {
                         case sf::Keyboard::A:
                         case sf::Keyboard::D:
-                            player.setAnimation(PLAYER_ANIMATION_IDLE);
+                            //player->setAnimation(PLAYER_ANIMATION_IDLE);
+                            player->controlPlayer(PLAYER_ACTION_IDLE);
                             break;
 
                         default:
@@ -52,7 +53,7 @@ int main()
                     switch (event.key.code)
                     {
                         case sf::Keyboard::Space:
-
+                            player->controlPlayer(PLAYER_ACTION_JUMP);
                             break;
                             
                         default:
@@ -67,15 +68,15 @@ int main()
 
         // Player actions
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-            player.controlPlayer(PLAYER_ACTION_MOVE_LEFT);
+            player->controlPlayer(PLAYER_ACTION_MOVE_LEFT);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-            player.controlPlayer(PLAYER_ACTION_MOVE_RIGHT);
+            player->controlPlayer(PLAYER_ACTION_MOVE_RIGHT);
         
         window.clear();
-        player.draw(window);
         window.draw(map);
+        player->draw(window);
         window.display();
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
