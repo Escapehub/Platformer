@@ -1,9 +1,9 @@
-#ifndef __TILEMAP__
-#define __TILEMAP__
+#ifndef __LEVELGEN__
+#define __LEVELGEN__
 
 #include <SFML/Graphics.hpp>
 
-class TileMap : public sf::Drawable, public sf::Transformable
+class LevelGen : public sf::Drawable, public sf::Transformable
 {
 private:
     sf::VertexArray m_vertices;
@@ -16,4 +16,4 @@ private:
     virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 };
 
-#endif // !__TILEMAP__
+#endif // !__LEVELGEN__
