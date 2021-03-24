@@ -6,7 +6,7 @@ set(
     SOURCES
     main.cpp
     src/player/player.cpp
-    src/map/tilemap.cpp
+    src/levelgen/levelgen.cpp
 )
     
 add_executable(Platformer ${SOURCES})
