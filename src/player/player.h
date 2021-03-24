@@ -27,6 +27,7 @@
 #define PLAYER_ACTION_THROW Player::Action::Throw
 #define PLAYER_ACTION_JUMP_ATTACK Player::Action::JumpAttack
 #define PLAYER_ACTION_JUMP_THROW Player::Action::JumpThrow
+#define PLAYER_ACTION_IDLE Player::Action::Idle
 
 #define PLAYER_DIRECTION_LEFT 0
 #define PLAYER_DIRECTION_RIGHT 1
@@ -43,7 +44,8 @@ public:
         Slide = 4,
         Throw = 5,
         JumpAttack = 6,
-        JumpThrow = 7
+        JumpThrow = 7,
+        Idle = 8,
     };
 
 private:
@@ -65,17 +67,32 @@ private:
     int m_currentDirection = PLAYER_DIRECTION_RIGHT;
     int m_currentAnimation = PLAYER_ANIMATION_IDLE;
     int m_currentFrame = 0;
+    bool m_isJumping = false;
+    float m_playerLevelDefaultElevation;
     sf::Clock m_clock;
     sf::Texture m_playerTexture;
+
+private:
+    // Player movement
+    float m_positionX       = 0;
+    float m_positionY       = 0;
+    float m_velocityX       = 0;
+    float m_velocityY       = 0;
+    float m_accelerationX   = 0;
+    float m_accelerationY   = 0;
+    float m_gravity         = 2;
 
 public:
     Player();
     void controlPlayer(Action);
     void draw(sf::RenderWindow&);
     void setAnimation(int ani) { this->m_currentAnimation = ani; }
+    bool getIsJumping() { return this->m_isJumping; }
+    void setPlayerLevelElevation(float elevation) { this->m_playerLevelDefaultElevation = elevation; }
 
 private:
     void setDirection(int direction) { this->m_currentDirection = direction;}
+    void updateMovement();
 };
 
 #endif // !__PLAYER__
