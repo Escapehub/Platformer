@@ -1,112 +1,77 @@
 #include "player.h"
 
-Player::Player()
+Player::Player(PlayerHelper::PlayerType playerType)
 {
-    this->setOrigin(sf::Vector2f(536 / 2, 495 / 2));
-    this->setTextureRect(sf::IntRect(0, 0, 536, 495));
-    this->setPosition(sf::Vector2f(500, 500));
+    this->m_playerHelper = std::make_unique<PlayerHelper>(playerType);
+    this->setPosition(sf::Vector2f(1920 / 2, 1080 / 2));
+    this->setOrigin(sf::Vector2f(48 / 2, 48 / 2));
+    this->m_playerRect = sf::IntRect(0, 0, 48, 48);
+    this->setTextureRect(this->m_playerRect);
 }
 
-void Player::controlPlayer(Action action)
+void Player::drawPlayer(sf::RenderWindow& window)
 {
-    switch (action)
-    {
-        case PLAYER_ACTION_MOVE_RIGHT:
-            this->setDirection(PLAYER_DIRECTION_RIGHT);
-            this->setAnimation(PLAYER_ANIMATION_RUN);
-            //this->move(PLAYER_MOVE_SPEED, 0);
-            this->m_velocityX = 2;
-            break;
-
-        case PLAYER_ACTION_MOVE_LEFT:
-            this->setDirection(PLAYER_DIRECTION_LEFT);
-            this->setAnimation(PLAYER_ANIMATION_RUN);
-            //this->move(-PLAYER_MOVE_SPEED, 0);
-            this->m_velocityX = -2;
-            break;
-
-        case PLAYER_ACTION_JUMP:
-            this->m_velocityY = -4;
-            this->setAnimation(PLAYER_ANIMATION_JUMP);
-            break;
-        
-        case PLAYER_ACTION_GLIDE:
-            this->setAnimation(PLAYER_ANIMATION_GLIDE);
-            break;
-
-        case PLAYER_ACTION_SLIDE:
-            this->setAnimation(PLAYER_ANIMATION_SLIDE);
-            break;
-
-        case PLAYER_ACTION_THROW:
-            this->setAnimation(PLAYER_ANIMATION_THROW);
-            break;
-
-        case PLAYER_ACTION_JUMP_ATTACK:
-            this->setAnimation(PLAYER_ANIMATION_JUMP_ATTACK);
-            break;
-
-        case PLAYER_ACTION_JUMP_THROW:
-            this->setAnimation(PLAYER_ANIMATION_JUMP_THROW);
-            break;
-
-        case PLAYER_ACTION_IDLE:
-            this->setAnimation(PLAYER_ANIMATION_IDLE);
-            this->m_velocityY = 0;
-            this->m_velocityX = 0;
-            break;
-    }
-}
-
-void Player::draw(sf::RenderWindow& window)
-{
-    // Setting player direction
+    // Set player direction
     switch (this->m_currentDirection)
     {
         case PLAYER_DIRECTION_RIGHT:
-            this->setScale(sf::Vector2f(PLAYER_SCALE, PLAYER_SCALE));
+            this->setScale(sf::Vector2f(1, 1));
             break;
 
         case PLAYER_DIRECTION_LEFT:
-            this->setScale(sf::Vector2f(-PLAYER_SCALE, PLAYER_SCALE));
+            this->setScale(sf::Vector2f(-1, 1));
             break;
     }
 
-    // Setting if player is currently jumping
-    if (this->getPosition().y > this->m_playerLevelDefaultElevation)
-        this->m_isJumping = true;
-    else 
-        this->m_isJumping = false;
-
-    // Setting the sprite depending on action
-    this->m_playerTexture.loadFromFile("assets/player/" + this->m_animationNames[this->m_currentAnimation] + std::to_string(this->m_currentFrame) + ".png");
+    // Set player texture
+    this->m_playerHelper->getTexture(&this->m_playerTexture);
     this->setTexture(this->m_playerTexture);
 
-    // Animating sprite
-    if (this->m_clock.getElapsedTime().asSeconds() > 0.1)
+    // Update player texture rect for animations
+    if (this->m_clock.getElapsedTime().asSeconds() > 0.2)
     {
-        this->m_currentFrame = (this->m_currentFrame + 1) % PLAYER_MAX_FRAME;
+        if (this->m_playerRect.left == 240)
+            this->m_playerRect.left = 0;
+        else
+            this->m_playerRect.left += 48;
 
+        this->setTextureRect(this->m_playerRect);
         this->m_clock.restart();
     }
 
-    this->updateMovement();
-    this->setPosition(this->m_positionX, this->m_positionY);
-
-    window.clear();
+    // Drawing player sprite
     window.draw(*this);
 }
 
-void Player::updateMovement() {
+void Player::movePlayer(Direction direction)
+{
+    this->m_currentDirection = direction;
+    switch (this->m_isRunning)
+    {
+        case true:
+            switch (this->m_currentDirection)
+            {
+            case PLAYER_DIRECTION_RIGHT:
+                this->move(PLAYER_SPEED_RUN, 0);
+                break;
 
-    if(m_positionY < 500)                  // If you are above ground
-        m_positionY += m_gravity;          // Add gravity
-    else if(m_positionY > 500)             // If you are below ground
-        m_positionY = 500;                 // That's not supposed to happen, put him back up
+            case PLAYER_DIRECTION_LEFT:
+                this->move(-PLAYER_SPEED_RUN, 0);
+                break;
+            }
+            break;
 
-    m_velocityX += m_accelerationX;
-    m_velocityY += m_accelerationY;
+        case false:
+            switch (this->m_currentDirection)
+            {
+            case PLAYER_DIRECTION_RIGHT:
+                this->move(PLAYER_SPEED_WALK, 0);
+                break;
 
-    m_positionX += m_velocityX;
-    m_positionY += m_velocityY;
+            case PLAYER_DIRECTION_LEFT:
+                this->move(-PLAYER_SPEED_WALK, 0);
+                break;
+            }
+            break;
+    }
 }
