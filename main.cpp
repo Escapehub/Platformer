@@ -5,7 +5,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Platformer");
 
-    std::unique_ptr<Player> player = std::make_unique<Player>();
+    std::unique_ptr<Player> player = std::make_unique<Player>(PLAYER_TYPE_WOODCUTTER);
 
     // define the level with an array of tile indices
     const int level[] =
@@ -38,10 +38,12 @@ int main()
                 case sf::Event::KeyReleased:
                     switch (event.key.code)
                     {
-                        case sf::Keyboard::A:
-                        case sf::Keyboard::D:
-                            //player->setAnimation(PLAYER_ANIMATION_IDLE);
-                            player->controlPlayer(PLAYER_ACTION_IDLE);
+                        case sf::Keyboard::Right:
+                        case sf::Keyboard::Left:
+                            player->getPlayerHelper()->setState(PLAYER_ANIMATION_IDLE);
+
+                        case sf::Keyboard::LShift:
+                            player->setIsRunning(false);
                             break;
 
                         default:
@@ -52,10 +54,8 @@ int main()
                 case sf::Event::KeyPressed:
                     switch (event.key.code)
                     {
-                        case sf::Keyboard::Space:
-                            player->controlPlayer(PLAYER_ACTION_JUMP);
-                            break;
-                            
+                        case sf::Keyboard::LShift:
+                            player->setIsRunning(true);
                         default:
                             break;
                     }
@@ -67,14 +67,14 @@ int main()
         }
 
         // Player actions
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-            player->controlPlayer(PLAYER_ACTION_MOVE_LEFT);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-            player->controlPlayer(PLAYER_ACTION_MOVE_RIGHT);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            player->movePlayer(PLAYER_DIRECTION_RIGHT);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            player->movePlayer(PLAYER_DIRECTION_LEFT);
         
         window.clear();
         window.draw(map);
-        player->draw(window);
+        player->drawPlayer(window);
         window.display();
     }
 
