@@ -40,7 +40,8 @@ int main()
                     {
                         case sf::Keyboard::Right:
                         case sf::Keyboard::Left:
-                            player->getPlayerHelper()->setState(PLAYER_ANIMATION_IDLE);
+                            player->updatePlayerAnimation(PLAYER_ANIMATION_IDLE);
+                            break;
 
                         case sf::Keyboard::LShift:
                             player->setIsRunning(false);
