@@ -6,8 +6,15 @@ set(
     SOURCES
     main.cpp
     src/player/player.cpp
+    src/playerhelper/playerhelper.cpp
+    src/enemy/enemy.cpp
+    src/enemyhelper/enemyhelper.cpp
     src/levelgen/levelgen.cpp
 )
+
+SET(BASEPATH "${CMAKE_SOURCE_DIR}")
+INCLUDE_DIRECTORIES("${BASEPATH}/player")
+INCLUDE_DIRECTORIES("${BASEPATH}/levelgen")
     
 add_executable(Platformer ${SOURCES})
 
