@@ -25,14 +25,19 @@ private:
     sf::IntRect m_playerRect;
     sf::Texture m_playerTexture;
 
+private:
+    int getCurrentEndRect();
+
 public:
     Player(PlayerHelper::PlayerType);
     void drawPlayer(sf::RenderWindow&);
 
-    std::unique_ptr<PlayerHelper>& getPlayerHelper() { return this->m_playerHelper; }
+    //std::unique_ptr<PlayerHelper>& getPlayerHelper() { return this->m_playerHelper; }
 
     void movePlayer(Direction);
     void setIsRunning(bool b) { this->m_isRunning = b; }
+
+    void updatePlayerAnimation(PlayerHelper::Animations ani);
 };
 
 #endif // !__PLAYER__

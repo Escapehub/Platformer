@@ -7,6 +7,7 @@ Player::Player(PlayerHelper::PlayerType playerType)
     this->setOrigin(sf::Vector2f(48 / 2, 48 / 2));
     this->m_playerRect = sf::IntRect(0, 0, 48, 48);
     this->setTextureRect(this->m_playerRect);
+    this->updatePlayerAnimation(PLAYER_ANIMATION_IDLE);
 }
 
 void Player::drawPlayer(sf::RenderWindow& window)
@@ -23,14 +24,10 @@ void Player::drawPlayer(sf::RenderWindow& window)
             break;
     }
 
-    // Set player texture
-    this->m_playerHelper->getTexture(&this->m_playerTexture);
-    this->setTexture(this->m_playerTexture);
-
     // Update player texture rect for animations
     if (this->m_clock.getElapsedTime().asSeconds() > 0.2)
     {
-        if (this->m_playerRect.left == 240)
+        if (this->m_playerRect.left == this->getCurrentEndRect())
             this->m_playerRect.left = 0;
         else
             this->m_playerRect.left += 48;
@@ -49,6 +46,7 @@ void Player::movePlayer(Direction direction)
     switch (this->m_isRunning)
     {
         case true:
+            this->updatePlayerAnimation(PLAYER_ANIMATION_RUN);
             switch (this->m_currentDirection)
             {
             case PLAYER_DIRECTION_RIGHT:
@@ -62,6 +60,7 @@ void Player::movePlayer(Direction direction)
             break;
 
         case false:
+            this->updatePlayerAnimation(PLAYER_ANIMATION_WALK);
             switch (this->m_currentDirection)
             {
             case PLAYER_DIRECTION_RIGHT:
@@ -73,5 +72,32 @@ void Player::movePlayer(Direction direction)
                 break;
             }
             break;
+    }
+}
+
+void Player::updatePlayerAnimation(PlayerHelper::Animations ani)
+{
+    this->m_playerHelper->setState(ani);
+    // Set player texture
+    this->m_playerHelper->getTexture(&this->m_playerTexture);
+    this->setTexture(this->m_playerTexture);
+}
+
+int Player::getCurrentEndRect()
+{
+    switch (this->m_playerHelper->getState())
+    {
+        case PLAYER_ANIMATION_ATTACK1:
+        case PLAYER_ANIMATION_ATTACK2:
+        case PLAYER_ANIMATION_ATTACK3:
+        case PLAYER_ANIMATION_RUN:
+        case PLAYER_ANIMATION_WALK:
+            return 240;
+
+        case PLAYER_ANIMATION_IDLE:
+            return 144;
+        
+        default:
+            return 240;
     }
 }
