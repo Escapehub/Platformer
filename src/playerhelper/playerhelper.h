@@ -55,6 +55,7 @@ public:
     PlayerHelper(PlayerType&);
     bool getTexture(sf::Texture*);
     void setState(Animations ani) { this->m_currentAnimation = ani; }
+    Animations getState() { return this->m_currentAnimation; }
 };
 
 #endif // !__PLAYERHELPER__
