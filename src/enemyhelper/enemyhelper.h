@@ -10,8 +10,8 @@
 #define ENEMY_TYPE_MUMMY    EnemyHelper::EnemyType::Mummy
 #define ENEMY_TYPE_DECEASED EnemyHelper::EnemyType::Deceased
 
-#define ENEMY_ANIMATION_ATTACK  EnemyHelper::Animation::Attack
-#define ENEMY_ANIMATION_DEATH   EnemyHelper::Animation::Death
+#define ENEMY_ANIMATION_ATTACK  EnemyHelper::Animations::Attack
+#define ENEMY_ANIMATION_DEATH   EnemyHelper::Animations::Death
 #define ENEMY_ANIMATION_HURT    EnemyHelper::Animations::Hurt
 #define ENEMY_ANIMATION_IDLE    EnemyHelper::Animations::Idle
 #define ENEMY_ANIMATION_WALK    EnemyHelper::Animations::Walk
