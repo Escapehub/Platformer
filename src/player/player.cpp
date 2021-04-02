@@ -1,8 +1,8 @@
 #include "player.h"
 
-Player::Player(PlayerHelper::PlayerType playerType)
+Player::Player(PlayerType playerType)
 {
-    this->m_playerHelper = std::make_unique<PlayerHelper>(playerType);
+    this->m_playerType = playerType;
     this->setPosition(sf::Vector2f(1920 / 2, 1080 / 2));
     this->setOrigin(sf::Vector2f(48 / 2, 48 / 2));
     this->m_playerRect = sf::IntRect(0, 0, 48, 48);
@@ -28,7 +28,10 @@ void Player::drawPlayer(sf::RenderWindow& window)
     if (this->m_clock.getElapsedTime().asSeconds() > 0.2)
     {
         if (this->m_playerRect.left == this->getCurrentEndRect())
+        {
             this->m_playerRect.left = 0;
+            this->setState(PLAYER_ANIMATION_IDLE);
+        }
         else
             this->m_playerRect.left += 48;
 
@@ -46,7 +49,7 @@ void Player::movePlayer(Direction direction)
     switch (this->m_isRunning)
     {
         case true:
-            this->updatePlayerAnimation(PLAYER_ANIMATION_RUN);
+            this->setState(PLAYER_ANIMATION_RUN);
             switch (this->m_currentDirection)
             {
             case PLAYER_DIRECTION_RIGHT:
@@ -60,7 +63,7 @@ void Player::movePlayer(Direction direction)
             break;
 
         case false:
-            this->updatePlayerAnimation(PLAYER_ANIMATION_WALK);
+            this->setState(PLAYER_ANIMATION_WALK);
             switch (this->m_currentDirection)
             {
             case PLAYER_DIRECTION_RIGHT:
@@ -75,17 +78,17 @@ void Player::movePlayer(Direction direction)
     }
 }
 
-void Player::updatePlayerAnimation(PlayerHelper::Animations ani)
+void Player::updatePlayerAnimation(Animations ani)
 {
-    this->m_playerHelper->setState(ani);
+    this->setState(ani);
     // Set player texture
-    this->m_playerHelper->getTexture(&this->m_playerTexture);
+    this->getTexture(&this->m_playerTexture);
     this->setTexture(this->m_playerTexture);
 }
 
 int Player::getCurrentEndRect()
 {
-    switch (this->m_playerHelper->getState())
+    switch (this->getState())
     {
         case PLAYER_ANIMATION_ATTACK1:
         case PLAYER_ANIMATION_ATTACK2:
@@ -99,5 +102,87 @@ int Player::getCurrentEndRect()
         
         default:
             return 240;
+    }
+}
+
+bool Player::getTexture(sf::Texture* texture)
+{
+    if (!texture->loadFromFile(this->getDirFromPlayerType() + this->getFileNameFromPlayerType() + this->getFileTypeFromAnimation()))
+        return false;
+    return true;
+}
+
+std::string Player::getDirFromPlayerType()
+{
+    switch (this->m_playerType)
+    {
+        case PLAYER_TYPE_GRAVEROBBER:
+            return "assets/player/graverobber/";
+        
+        case PLAYER_TYPE_STEAMMAN:
+            return "assets/player/steamman/";
+
+        case PLAYER_TYPE_WOODCUTTER:
+            return "assets/player/woodcutter/";
+
+        default:
+            return "";
+    }
+}
+
+std::string Player::getFileNameFromPlayerType()
+{
+    switch (this->m_playerType)
+    {
+        case PLAYER_TYPE_GRAVEROBBER:
+            return "GraveRobber_";
+        
+        case PLAYER_TYPE_STEAMMAN:
+            return "SteamMan_";
+
+        case PLAYER_TYPE_WOODCUTTER:
+            return "Woodcutter_";
+
+        default:
+            return "";
+    }
+}
+
+std::string Player::getFileTypeFromAnimation()
+{
+    switch (this->m_currentAnimation)
+    {
+        case PLAYER_ANIMATION_ATTACK1:
+            return "attack1.png";
+
+        case PLAYER_ANIMATION_ATTACK2:
+            return "attack2.png";
+
+        case PLAYER_ANIMATION_ATTACK3:
+            return "attack3.png";
+
+        case PLAYER_ANIMATION_CLIMB:
+            return "climb.png";
+
+        case PLAYER_ANIMATION_DEATH:
+            return "death.png";
+
+        case PLAYER_ANIMATION_HURT:
+            return "hurt.png";
+
+        case PLAYER_ANIMATION_IDLE:
+            return "idle.png";
+
+        case PLAYER_ANIMATION_JUMP:
+            return "jump.png";
+
+        case PLAYER_ANIMATION_RUN:
+            return "run.png";
+
+        case PLAYER_ANIMATION_WALK:
+            return "walk.png";
+
+        default:
+            return "";
     }
 }
