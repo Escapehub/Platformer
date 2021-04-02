@@ -6,7 +6,6 @@ set(
     SOURCES
     main.cpp
     src/player/player.cpp
-    src/playerhelper/playerhelper.cpp
     src/enemy/enemy.cpp
     src/enemyhelper/enemyhelper.cpp
     src/levelgen/levelgen.cpp
