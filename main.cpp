@@ -40,7 +40,7 @@ int main()
                     {
                         case sf::Keyboard::Right:
                         case sf::Keyboard::Left:
-                            player->updatePlayerAnimation(PLAYER_ANIMATION_IDLE);
+                            player->setState(PLAYER_STATE_IDLE);
                             break;
 
                         case sf::Keyboard::LShift:
@@ -58,6 +58,16 @@ int main()
                         case sf::Keyboard::LShift:
                             player->setIsRunning(true);
                         default:
+                            break;
+
+                        case sf::Keyboard::A:
+                            player->setState(PLAYER_STATE_ATTACK1);
+                            break;
+                        case sf::Keyboard::S:
+                            player->setState(PLAYER_STATE_ATTACK2);
+                            break;
+                        case sf::Keyboard::D:
+                            player->setState(PLAYER_STATE_ATTACK3);
                             break;
                     }
                     break;
