@@ -7,11 +7,14 @@ Player::Player(PlayerType playerType)
     this->setOrigin(sf::Vector2f(48 / 2, 48 / 2));
     this->m_playerRect = sf::IntRect(0, 0, 48, 48);
     this->setTextureRect(this->m_playerRect);
-    this->updatePlayerAnimation(PLAYER_ANIMATION_IDLE);
 }
 
 void Player::drawPlayer(sf::RenderWindow& window)
 {
+    // Set player texture
+    this->m_playerTexture.loadFromFile("assets/player/" + this->getDirFromPlayerType() + this->getFileNameFromPlayerType() + this->getFileTypeFromState());
+    this->setTexture(this->m_playerTexture);
+
     // Set player direction
     switch (this->m_currentDirection)
     {
@@ -30,7 +33,7 @@ void Player::drawPlayer(sf::RenderWindow& window)
         if (this->m_playerRect.left == this->getCurrentEndRect())
         {
             this->m_playerRect.left = 0;
-            this->setState(PLAYER_ANIMATION_IDLE);
+            this->setState(PLAYER_STATE_IDLE);
         }
         else
             this->m_playerRect.left += 48;
@@ -49,7 +52,7 @@ void Player::movePlayer(Direction direction)
     switch (this->m_isRunning)
     {
         case true:
-            this->setState(PLAYER_ANIMATION_RUN);
+            this->setState(PLAYER_STATE_RUN);
             switch (this->m_currentDirection)
             {
             case PLAYER_DIRECTION_RIGHT:
@@ -63,7 +66,7 @@ void Player::movePlayer(Direction direction)
             break;
 
         case false:
-            this->setState(PLAYER_ANIMATION_WALK);
+            this->setState(PLAYER_STATE_WALK);
             switch (this->m_currentDirection)
             {
             case PLAYER_DIRECTION_RIGHT:
@@ -78,26 +81,18 @@ void Player::movePlayer(Direction direction)
     }
 }
 
-void Player::updatePlayerAnimation(Animations ani)
-{
-    this->setState(ani);
-    // Set player texture
-    this->getTexture(&this->m_playerTexture);
-    this->setTexture(this->m_playerTexture);
-}
-
 int Player::getCurrentEndRect()
 {
     switch (this->getState())
     {
-        case PLAYER_ANIMATION_ATTACK1:
-        case PLAYER_ANIMATION_ATTACK2:
-        case PLAYER_ANIMATION_ATTACK3:
-        case PLAYER_ANIMATION_RUN:
-        case PLAYER_ANIMATION_WALK:
+        case PLAYER_STATE_ATTACK1:
+        case PLAYER_STATE_ATTACK2:
+        case PLAYER_STATE_ATTACK3:
+        case PLAYER_STATE_RUN:
+        case PLAYER_STATE_WALK:
             return 240;
 
-        case PLAYER_ANIMATION_IDLE:
+        case PLAYER_STATE_IDLE:
             return 144;
         
         default:
@@ -105,25 +100,18 @@ int Player::getCurrentEndRect()
     }
 }
 
-bool Player::getTexture(sf::Texture* texture)
-{
-    if (!texture->loadFromFile(this->getDirFromPlayerType() + this->getFileNameFromPlayerType() + this->getFileTypeFromAnimation()))
-        return false;
-    return true;
-}
-
 std::string Player::getDirFromPlayerType()
 {
     switch (this->m_playerType)
     {
         case PLAYER_TYPE_GRAVEROBBER:
-            return "assets/player/graverobber/";
+            return "graverobber/";
         
         case PLAYER_TYPE_STEAMMAN:
-            return "assets/player/steamman/";
+            return "steamman/";
 
         case PLAYER_TYPE_WOODCUTTER:
-            return "assets/player/woodcutter/";
+            return "woodcutter/";
 
         default:
             return "";
@@ -148,38 +136,38 @@ std::string Player::getFileNameFromPlayerType()
     }
 }
 
-std::string Player::getFileTypeFromAnimation()
+std::string Player::getFileTypeFromState()
 {
-    switch (this->m_currentAnimation)
+    switch (this->m_currentState)
     {
-        case PLAYER_ANIMATION_ATTACK1:
+        case PLAYER_STATE_ATTACK1:
             return "attack1.png";
 
-        case PLAYER_ANIMATION_ATTACK2:
+        case PLAYER_STATE_ATTACK2:
             return "attack2.png";
 
-        case PLAYER_ANIMATION_ATTACK3:
+        case PLAYER_STATE_ATTACK3:
             return "attack3.png";
 
-        case PLAYER_ANIMATION_CLIMB:
+        case PLAYER_STATE_CLIMB:
             return "climb.png";
 
-        case PLAYER_ANIMATION_DEATH:
+        case PLAYER_STATE_DEATH:
             return "death.png";
 
-        case PLAYER_ANIMATION_HURT:
+        case PLAYER_STATE_HURT:
             return "hurt.png";
 
-        case PLAYER_ANIMATION_IDLE:
+        case PLAYER_STATE_IDLE:
             return "idle.png";
 
-        case PLAYER_ANIMATION_JUMP:
+        case PLAYER_STATE_JUMP:
             return "jump.png";
 
-        case PLAYER_ANIMATION_RUN:
+        case PLAYER_STATE_RUN:
             return "run.png";
 
-        case PLAYER_ANIMATION_WALK:
+        case PLAYER_STATE_WALK:
             return "walk.png";
 
         default:

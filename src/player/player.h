@@ -1,11 +1,12 @@
 /*
-    +---------------------------------------+
-    |   Player handler                      |
-    +---------------------------------------+
-    |   \file player.h                      |
-    |   \defines __PLAYER__                 |
-    |   \class Player extends sf::Sprite    |
-    +---------------------------------------+
+    +---------------------------+
+    |   Player handler          |
+    +---------------------------+
+    |   \file player.h          |
+    |   \defines __PLAYER__     |
+    |   \class Player           |
+    |   \parent sf::Sprite      |
+    +---------------------------+
 */
 
 #ifndef __PLAYER__
@@ -16,6 +17,7 @@
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <fmt/format.h>
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 // Player directions
@@ -27,7 +29,7 @@
 // Player speed options
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 #define PLAYER_SPEED_WALK 0.2
-#define PLAYER_SPEED_RUN  0.5
+#define PLAYER_SPEED_RUN  0.3
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 // Player types
@@ -37,18 +39,18 @@
 #define PLAYER_TYPE_STEAMMAN    Player::PlayerType::SteamMan
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-// Player animations
+// Player states
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-#define PLAYER_ANIMATION_ATTACK1 Player::Animations::Attack1
-#define PLAYER_ANIMATION_ATTACK2 Player::Animations::Attack2
-#define PLAYER_ANIMATION_ATTACK3 Player::Animations::Attack3
-#define PLAYER_ANIMATION_CLIMB   Player::Animations::Climb
-#define PLAYER_ANIMATION_DEATH   Player::Animations::Death
-#define PLAYER_ANIMATION_HURT    Player::Animations::Hurt
-#define PLAYER_ANIMATION_IDLE    Player::Animations::Idle
-#define PLAYER_ANIMATION_JUMP    Player::Animations::Jump
-#define PLAYER_ANIMATION_RUN     Player::Animations::Run
-#define PLAYER_ANIMATION_WALK    Player::Animations::Walk
+#define PLAYER_STATE_ATTACK1 Player::State::Attack1
+#define PLAYER_STATE_ATTACK2 Player::State::Attack2
+#define PLAYER_STATE_ATTACK3 Player::State::Attack3
+#define PLAYER_STATE_CLIMB   Player::State::Climb
+#define PLAYER_STATE_DEATH   Player::State::Death
+#define PLAYER_STATE_HURT    Player::State::Hurt
+#define PLAYER_STATE_IDLE    Player::State::Idle
+#define PLAYER_STATE_JUMP    Player::State::Jump
+#define PLAYER_STATE_RUN     Player::State::Run
+#define PLAYER_STATE_WALK    Player::State::Walk
 
 class Player : public sf::Sprite
 {
@@ -61,13 +63,13 @@ public:
     {
         WoodCutter, GraveRobber, SteamMan
     };
-    enum Animations
+    enum State
     {
         Attack1, Attack2, Attack3, Climb, Death, Hurt, Idle, Jump, Run, Walk
     };
 
 private:
-    Animations m_currentAnimation = PLAYER_ANIMATION_IDLE;
+    State m_currentState = PLAYER_STATE_IDLE;
     Direction m_currentDirection = PLAYER_DIRECTION_RIGHT;
     PlayerType m_playerType;
     bool m_isRunning = false;
@@ -99,11 +101,11 @@ private:
     std::string getFileNameFromPlayerType();
 
     /**
-     * Get animation file name from current animation
+     * Get animation file name from current state
      * 
      * \return std::string
      */
-    std::string getFileTypeFromAnimation();
+    std::string getFileTypeFromState();
 
 public:
     /**
@@ -135,33 +137,18 @@ public:
     void setIsRunning(bool b) { this->m_isRunning = b; }
 
     /**
-     * Update player animation
-     * 
-     * \param Animations
-     */
-    void updatePlayerAnimation(Animations ani);
-
-    /**
-     * Get texture for current state
-     * 
-     * \param sf::Texture*
-     * \return bool
-     */
-    bool getTexture(sf::Texture*);
-
-    /**
      * Set the current state of the sprite
      * 
-     * \param Animations
+     * \param State
      */
-    void setState(Animations ani) { this->m_currentAnimation = ani; }
+    void setState(State state) { this->m_currentState = state; }
 
     /**
      * Get the current state of the sprite
      * 
-     * \return Animations
+     * \return State
      */
-    Animations getState() { return this->m_currentAnimation; }
+    State getState() { return this->m_currentState; }
 };
 
 #endif // !__PLAYER__
