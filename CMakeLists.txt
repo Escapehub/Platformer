@@ -19,5 +19,7 @@ add_executable(Platformer ${SOURCES})
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
+set_property(TARGET Platformer PROPERTY CXX_STANDARD 17)
+
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 target_link_libraries(Platformer sfml-graphics sfml-audio)
