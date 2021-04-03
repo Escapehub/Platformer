@@ -1,6 +1,6 @@
-#include "src/levelgen/levelgen.h"
 #include "src/player/player.h"
 #include "src/helpers/helpers.hpp"
+#include "src/levelgen/levelgen.h"
 
 int main()
 {
