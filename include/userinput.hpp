@@ -5,7 +5,7 @@
 // Includes
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 #include <SFML/Graphics.hpp>
-#include "../player/player.h"
+#include "player.h"
 
 void RegisterEvent(sf::RenderWindow& window, std::unique_ptr<Player>& player)
 {

@@ -17,7 +17,6 @@
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 #include <SFML/Graphics.hpp>
 #include <string>
-#include <fmt/format.h>
 
 //-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 // Player directions

@@ -1,12 +1,12 @@
-#include "src/player/player.h"
-#include "src/helpers/helpers.hpp"
-#include "src/levelgen/levelgen.h"
+#include "player.h"
+#include "helpers.hpp"
+#include "levelgen.h"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Platformer");
 
-    std::unique_ptr<Player> player = std::make_unique<Player>(PLAYER_TYPE_WOODCUTTER);
+    std::unique_ptr<Player> player = std::make_unique<Player>(PLAYER_TYPE_GRAVEROBBER);
 
     // define the level with an array of tile indices
     const int level[] =
@@ -22,8 +22,8 @@ int main()
     };
 
     // create the tilemap from the level definition
-    LevelGen map;
-    if (!map.load("assets/level/tileset.png", sf::Vector2u(128, 128), level, 16, 8))
+    std::unique_ptr<LevelGen> map = std::make_unique<LevelGen>();
+    if (!map->load("assets/level/tileset.png", sf::Vector2u(128, 128), level, 16, 8))
         return EXIT_FAILURE;
 
     while (window.isOpen())
@@ -31,7 +31,7 @@ int main()
         RegisterEvent(window, player);
         
         window.clear();
-        window.draw(map);
+        window.draw(*map);
         player->drawPlayer(window);
         window.display();
     }

@@ -1,7 +1,7 @@
 #ifndef __ENEMY__
 #define __ENEMY__
 
-#include "../enemyhelper/enemyhelper.h"
+#include "enemyhelper.h"
 
 #define ENEMY_DIRECTION_LEFT    Enemy::Direction::Left
 #define ENEMY_DIRECTION_RIGHT   Enemy::Direction::Right
