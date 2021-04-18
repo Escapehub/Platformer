@@ -7,8 +7,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+IF (WIN32)
+	set(SFML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/SFML-2.5.1/lib/cmake/SFML")
+ENDIF()
+
 # Enable debug symbols by default
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug 
     CACHE STRING 
       "Choose the type of build (Debug or Release)" FORCE)
@@ -20,20 +24,23 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set option to control setting the resource path variable
 option(USE_INSTALL_RESOURCE_PATH "Set resource path to install location" OFF)
 
+# Copy assets
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 # Link sfml statically 
 set(SFML_STATIC_LIBRARIES TRUE)
 
 # Fin SFML shared libraries
-find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
-file(
-	GLOB
-  SOURCES
-  "include/*.h"
-  "src/*.cxx"
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
+FILE(GLOB
+    SOURCES
+    "src/*.cpp"
+    "include/*.h"
 )
+
 # Compile executable
 add_executable(Platformer ${SOURCES})
 
