@@ -35,4 +35,4 @@ public:
     void updateEnemyAnimation(EnemyHelper::Animations ani);
 };
 
-#endif
+#endif // !__ENEMY__

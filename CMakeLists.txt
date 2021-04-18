@@ -22,18 +22,18 @@ option(USE_INSTALL_RESOURCE_PATH "Set resource path to install location" OFF)
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
+# Link sfml statically 
+set(SFML_STATIC_LIBRARIES TRUE)
+
 # Fin SFML shared libraries
 find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
 
-set(
-    SOURCES
-    main.cpp
-    src/enemy/enemy.cpp
-    src/helpers/helpers.hpp
-    src/levelgen/levelgen.cpp
-    src/player/player.cpp
+file(
+	GLOB
+  SOURCES
+  "include/*.h"
+  "src/*.cxx"
 )
-
 # Compile executable
 add_executable(Platformer ${SOURCES})
 
@@ -41,7 +41,7 @@ add_executable(Platformer ${SOURCES})
 target_include_directories(Platformer 
   PRIVATE
     "${PROJECT_BINARY_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/*/"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 )
 
 # Set executable RPATH

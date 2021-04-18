@@ -26,7 +26,7 @@ void Enemy::drawEnemy(sf::RenderWindow& window)
     // Update player texture rect for animations
     if (this->m_clock.getElapsedTime().asSeconds() > 0.2)
     {
-        if (this->m_enemyRect.left == this->getCurrentEndRect())
+        if (this->m_enemyRect.left == 240)
             this->m_enemyRect.left = 0;
         else
             this->m_enemyRect.left += 48;
